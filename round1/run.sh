@@ -3,14 +3,16 @@
 EXECUTABLE="$1"
 
 mkdir -p output
+mkdir -p best_output
 
 scores=($(cat scores.best))
 best_scores=()
 
 i=0
-for f in `ls input/`; do
+for f in `\ls -1 input/`; do
     # Run stuff
-    current=$("$1" < "input/${f}" 2>&1 >"output/${f}.out")
+    output_file="output/${f}.out"
+    current=$("$1" < "input/${f}" 2>&1 >"${output_file}")
 
     # Print * if there is a better score, and = if its the same
     best="${scores[$i]}"
@@ -21,6 +23,7 @@ for f in `ls input/`; do
     then
         msg="${current} *"
         new_best="${current}"
+        cp "${output_file}" "best_${output_file}"
     elif test "${current}" -eq "${best}"
     then
         msg="${current} ="
