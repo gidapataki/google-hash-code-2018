@@ -10,7 +10,9 @@ bool Solver::CanSatisfyRide(const Car& car, const Ride& ride) {
 ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 	assert(CanSatisfyRide(car, ride));
 
-	int abs_wait = std::abs(car.available_in_tick + distance(car, ride) - ride.earliest_start);
+	int abs_wait = std::abs(
+		car.available_in_tick + distance(car, ride) - ride.earliest_start);
+	return {-ride.length(), -abs_wait, -distance(car, ride)};
 	return {-abs_wait, ride.length(), -distance(car, ride)};
 }
 
