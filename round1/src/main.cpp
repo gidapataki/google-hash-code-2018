@@ -22,6 +22,12 @@ struct Input {
 	int step_count;
 };
 
+struct CarAssignments {
+	std::vector<int> rides;
+};
+
+using CarAssigmentsVec = std::vector<CarAssignments>;
+
 Input ParseInput(std::istream& in) {
 	Input input;
 
@@ -42,8 +48,27 @@ Input ParseInput(std::istream& in) {
 	return input;
 }
 
+void OutputAssigments(std::ostream& os, const CarAssigmentsVec& v) {
+	for (auto& e : v) {
+		os << e.rides.size();
+		for (int i : e.rides) {
+			os << i;
+		}
+		os << '\n';
+	}
+	os << std::flush;
+}
+
+CarAssigmentsVec GetResult(const Input& input) {
+	CarAssigmentsVec assignments(input.car_count);
+	return assignments;
+}
+
 int main() {
 	auto input = ParseInput(std::cin);
+	auto result = GetResult(input);
+
+	OutputAssigments(std::cout, result);
 
 	return 0;
 }
