@@ -1,32 +1,9 @@
 #include <iostream>
 #include <vector>
 
-struct Ride {
-	int index;
-	int start_row;
-	int start_col;
-	int end_row;
-	int end_col;
+#include "Solver.h"
 
-	int earliest_start;
-	int latest_finish;
-};
 
-struct Input {
-	int rows;
-	int cols;
-	int car_count;
-	std::vector<Ride> rides;
-
-	int bonus_for_starting_on_time;
-	int step_count;
-};
-
-struct CarAssignments {
-	std::vector<int> rides;
-};
-
-using CarAssigmentsVec = std::vector<CarAssignments>;
 
 Input ParseInput(std::istream& in) {
 	Input input;
@@ -60,8 +37,7 @@ void OutputAssigments(std::ostream& os, const CarAssigmentsVec& v) {
 }
 
 CarAssigmentsVec GetResult(const Input& input) {
-	CarAssigmentsVec assignments(input.car_count);
-	return assignments;
+	return Solver{input}.Solve();
 }
 
 int main() {
