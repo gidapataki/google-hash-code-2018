@@ -29,16 +29,12 @@ ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 #if 0
 	int abs_wait = std::abs(
 		car.available_in_tick + distance(car, ride) - ride.earliest_start);
-<<<<<<< HEAD
 	return ScoreType{-ride.length(), -abs_wait, -distance(car, ride)};
 	return ScoreType{-abs_wait, ride.length(), -distance(car, ride)};
-||||||| merged common ancestors
 	return {-ride.length(), -abs_wait, -distance(car, ride)};
 	return {-abs_wait, ride.length(), -distance(car, ride)};
-=======
 	return {-ride.length(), -abs_wait, -distance(car, ride)};
 	return {-abs_wait, ride.length(), -distance(car, ride)};
->>>>>>>>
 #endif
 }
 
