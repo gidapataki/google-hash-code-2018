@@ -1,2 +1,4 @@
 build/
 .sugoi.*
+output/
+src.zip
