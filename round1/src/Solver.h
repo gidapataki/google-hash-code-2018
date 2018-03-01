@@ -47,12 +47,14 @@ struct Car {
 	std::vector<int> rides;
 };
 
+using ScoreType = int;
+
 struct Solver {
 	Solver(Input input) : input_(std::move(input)) {}
 
 	bool CanSatisfyRide(const Car& car, const Ride& ride);
 
-	int ScoreCarRide(const Car& car, const Ride& ride);
+	ScoreType ScoreCarRide(const Car& car, const Ride& ride);
 
 	Ride* SelectRide(const Car& c);
 	void AssignRide(Car& car, Ride& ride);

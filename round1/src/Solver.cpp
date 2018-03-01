@@ -7,7 +7,7 @@ bool Solver::CanSatisfyRide(const Car& car, const Ride& ride) {
 	return car.available_in_tick + sum_ride_length < ride.latest_finish;
 }
 
-int Solver::ScoreCarRide(const Car& car, const Ride& ride) {
+ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 	assert(CanSatisfyRide(car, ride));
 
 	// TODO
@@ -35,10 +35,10 @@ void Solver::AssignRide(Car& car, Ride& ride) {
 Ride* Solver::SelectRide(const Car& c) {
 	assert(c.available_in_tick <= /* < ? */ input_.step_count);
 	Ride* best_ride = nullptr;
-	int best_score = 0;
+	ScoreType best_score = {};
 	for (Ride& ride : input_.rides) {
 		if (CanSatisfyRide(c, ride)) {
-			int ride_score = ScoreCarRide(c, ride);
+			auto ride_score = ScoreCarRide(c, ride);
 			if (!best_ride || best_score < ride_score) {
 				best_ride = &ride;
 				best_score = ride_score;
