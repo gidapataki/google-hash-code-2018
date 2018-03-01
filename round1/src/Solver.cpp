@@ -7,6 +7,15 @@ bool Solver::CanSatisfyRide(const Car& car, const Ride& ride) {
 	return car.available_in_tick + sum_ride_length < ride.latest_finish;
 }
 
+bool Solver::CanGetBonus(const Car& car, const Ride& ride) {
+	return car.available_in_tick + distance(car, ride) <= ride.earliest_start;
+}
+
+int Solver::GetScore(const Car& car, const Ride& ride) {
+	return CanGetBonus(car, ride) * input_.bonus_for_starting_on_time +
+		ride.length();
+}
+
 ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 	assert(CanSatisfyRide(car, ride));
 

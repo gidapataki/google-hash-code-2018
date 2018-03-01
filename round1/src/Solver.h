@@ -53,6 +53,8 @@ struct Solver {
 	Solver(Input input) : input_(std::move(input)) {}
 
 	bool CanSatisfyRide(const Car& car, const Ride& ride);
+	bool CanGetBonus(const Car& car, const Ride& ride);
+	int GetScore(const Car& car, const Ride& ride);
 
 	ScoreType ScoreCarRide(const Car& car, const Ride& ride);
 

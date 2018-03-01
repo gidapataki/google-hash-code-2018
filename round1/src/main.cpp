@@ -44,6 +44,7 @@ int main() {
 	auto input = ParseInput(std::cin);
 	auto result = GetResult(input);
 
+	// cerr << score;
 	OutputAssigments(std::cout, result);
 
 	return 0;
