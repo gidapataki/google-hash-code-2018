@@ -47,7 +47,7 @@ struct Car {
 	std::vector<int> rides;
 };
 
-using ScoreType = std::tuple<int, int>;
+using ScoreType = std::tuple<int, int, int>;
 
 struct Solver {
 	Solver(Input input) : input_(std::move(input)) {}
