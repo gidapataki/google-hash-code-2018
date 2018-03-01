@@ -37,7 +37,10 @@ void OutputAssigments(std::ostream& os, const CarAssigmentsVec& v) {
 }
 
 CarAssigmentsVec GetResult(const Input& input) {
-	return Solver{input}.Solve();
+	Solver solver{input};
+	auto result = solver.Solve();
+	std::cerr << "Score = " << solver.full_score_ << std::endl;
+	return result;
 }
 
 int main() {
