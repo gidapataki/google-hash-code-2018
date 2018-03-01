@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <vector>
+#include <iostream>
 
 inline
 int distance(int ar, int ac, int br, int bc) {
@@ -48,6 +49,10 @@ struct Car {
 
 struct Solver {
 	Solver(Input input) : input_(std::move(input)) {}
+
+	bool CanSatisfyRide(const Car& car, const Ride& ride);
+
+	int ScoreCarRide(const Car& car, const Ride& ride);
 
 	Ride* SelectRide(const Car& c);
 	void AssignRide(Car& car, Ride& ride);

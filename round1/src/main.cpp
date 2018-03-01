@@ -16,7 +16,7 @@ Input ParseInput(std::istream& in) {
 		Ride ride;
 		ride.index = i;
 		in >> ride.start_row >> ride.start_col >>
-			ride.end_col >> ride.end_col >>
+			ride.end_row >> ride.end_col >>
 			ride.earliest_start >> ride.latest_finish;
 
 		input.rides.push_back(ride);
@@ -27,9 +27,9 @@ Input ParseInput(std::istream& in) {
 
 void OutputAssigments(std::ostream& os, const CarAssigmentsVec& v) {
 	for (auto& e : v) {
-		os << e.rides.size();
+		os << e.rides.size() << ' ';
 		for (int i : e.rides) {
-			os << i;
+			os << i << ' ';
 		}
 		os << '\n';
 	}
