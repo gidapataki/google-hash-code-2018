@@ -36,16 +36,21 @@ void OutputAssigments(std::ostream& os, const CarAssigmentsVec& v) {
 	os << std::flush;
 }
 
-CarAssigmentsVec GetResult(const Input& input) {
-	Solver solver{input};
+CarAssigmentsVec GetResult(const Input& input, int value) {
+	Solver solver{input, value};
 	auto result = solver.Solve();
 	std::cerr << solver.full_score_ << std::endl;
 	return result;
 }
 
-int main() {
+int main(int argc, char** argv) {
+	int value = 0;
+	if (argc > 1) {
+		value = std::stoi(argv[1]);
+	}
+
 	auto input = ParseInput(std::cin);
-	auto result = GetResult(input);
+	auto result = GetResult(input, value);
 
 	// cerr << score;
 	OutputAssigments(std::cout, result);

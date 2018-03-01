@@ -20,11 +20,19 @@ int Solver::GetScore(const Car& car, const Ride& ride) {
 ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 	assert(CanSatisfyRide(car, ride));
 
-	int sum_ride_length = distance(car, ride) + ride.length();
+	int current_distance = distance(car, ride);
+	int sum_ride_length = current_distance + ride.length();
 	int end_tick = std::max(car.available_in_tick + sum_ride_length,
 				ride.earliest_start + ride.length());
 
-	return ScoreType{double(GetScore(car, ride)) / (end_tick - car.available_in_tick), 0, 0};
+	int delta_t = (end_tick - car.available_in_tick);
+	double score_ratio = double(GetScore(car, ride)) / delta_t;
+	double score_ratio2 = double(ride.length());
+	double q = magic_ / 10.0;
+
+	double weight = q * score_ratio + (1 - q) * score_ratio2;
+
+	return ScoreType{weight, 0, 0};
 
 #if 0
 	int abs_wait = std::abs(

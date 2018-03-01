@@ -1,4 +1,5 @@
 build/
 .sugoi.*
 output/
+best_output/
 src.zip

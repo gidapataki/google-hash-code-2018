@@ -50,7 +50,7 @@ struct Car {
 using ScoreType = std::tuple<double, int, int>;
 
 struct Solver {
-	Solver(Input input) : input_(std::move(input)) {}
+	Solver(Input input, int magic) : input_(std::move(input)), magic_(magic) {}
 
 	bool CanSatisfyRide(const Car& car, const Ride& ride);
 	bool CanGetBonus(const Car& car, const Ride& ride);
@@ -64,6 +64,7 @@ struct Solver {
 	CarAssigmentsVec Solve();
 
 	Input input_;
+	int magic_ = 0;
 	int full_score_ = 0;
 };
 
