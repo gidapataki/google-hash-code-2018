@@ -11,7 +11,7 @@ ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 	assert(CanSatisfyRide(car, ride));
 
 	// TODO
-	return ride.length() - distance(car, ride);
+	return {ride.length(), distance(car, ride)};
 }
 
 void Solver::AssignRide(Car& car, Ride& ride) {
