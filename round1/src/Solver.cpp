@@ -1,6 +1,7 @@
 #include "Solver.h"
 #include <queue>
 #include <cassert>
+#include <tuple>
 
 bool Solver::CanSatisfyRide(const Car& car, const Ride& ride) {
 	int sum_ride_length = distance(car, ride) + ride.length();
@@ -21,8 +22,8 @@ ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 
 	int abs_wait = std::abs(
 		car.available_in_tick + distance(car, ride) - ride.earliest_start);
-	return {-ride.length(), -abs_wait, -distance(car, ride)};
-	return {-abs_wait, ride.length(), -distance(car, ride)};
+	return ScoreType{-ride.length(), -abs_wait, -distance(car, ride)};
+	return ScoreType{-abs_wait, ride.length(), -distance(car, ride)};
 }
 
 void Solver::AssignRide(Car& car, Ride& ride) {
