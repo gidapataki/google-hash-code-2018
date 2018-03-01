@@ -20,10 +20,26 @@ int Solver::GetScore(const Car& car, const Ride& ride) {
 ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 	assert(CanSatisfyRide(car, ride));
 
+	int sum_ride_length = distance(car, ride) + ride.length();
+	int end_tick = std::max(car.available_in_tick + sum_ride_length,
+				ride.earliest_start + ride.length());
+
+	return ScoreType{double(GetScore(car, ride)) / (end_tick - car.available_in_tick), 0, 0};
+
+#if 0
 	int abs_wait = std::abs(
 		car.available_in_tick + distance(car, ride) - ride.earliest_start);
+<<<<<<< HEAD
 	return ScoreType{-ride.length(), -abs_wait, -distance(car, ride)};
 	return ScoreType{-abs_wait, ride.length(), -distance(car, ride)};
+||||||| merged common ancestors
+	return {-ride.length(), -abs_wait, -distance(car, ride)};
+	return {-abs_wait, ride.length(), -distance(car, ride)};
+=======
+	return {-ride.length(), -abs_wait, -distance(car, ride)};
+	return {-abs_wait, ride.length(), -distance(car, ride)};
+>>>>>>>>
+#endif
 }
 
 void Solver::AssignRide(Car& car, Ride& ride) {
