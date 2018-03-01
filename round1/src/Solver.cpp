@@ -30,7 +30,9 @@ ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 	double score_ratio2 = double(ride.length());
 	double q = magic_ / 10.0;
 
-	double weight = q * score_ratio + (1 - q) * score_ratio2;
+	// double weight = q * score_ratio + (1 - q) * score_ratio2;
+	// double weight = q * score_ratio + (1 - q) * score_ratio2;
+	auto weight = double(GetScore(car, ride)) - end_tick;
 
 	return ScoreType{weight, 0, 0};
 

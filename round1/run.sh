@@ -48,7 +48,7 @@ run_solution() {
     done > scores.best
 }
 
-for i in $(seq 0 10)
+for i in $(seq 0 0)
 do
     run_solution "$1" "$i"
 done
