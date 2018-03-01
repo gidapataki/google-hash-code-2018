@@ -64,6 +64,7 @@ struct Solver {
 	CarAssigmentsVec Solve();
 
 	Input input_;
+	int full_score_ = 0;
 };
 
 inline

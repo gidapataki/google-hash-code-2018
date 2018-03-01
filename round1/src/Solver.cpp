@@ -36,6 +36,8 @@ ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
 void Solver::AssignRide(Car& car, Ride& ride) {
 	assert(CanSatisfyRide(car, ride));
 
+	full_score_ += GetScore(car, ride);
+
 	int sum_ride_length = distance(car, ride) + ride.length();
 	car.available_in_tick =
 		std::max(car.available_in_tick + sum_ride_length,
