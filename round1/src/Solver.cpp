@@ -2,6 +2,12 @@
 #include <queue>
 #include <cassert>
 #include <tuple>
+#include <algorithm>
+#include <iostream>
+
+bool CompareScores(const ScoreType& a, const ScoreType& b) {
+	return std::get<0>(a) * std::get<1>(b) < std::get<1>(a) * std::get<0>(b);
+}
 
 bool Solver::CanSatisfyRide(const Car& car, const Ride& ride) {
 	int sum_ride_length = distance(car, ride) + ride.length();
@@ -18,24 +24,46 @@ int Solver::GetScore(const Car& car, const Ride& ride) {
 }
 
 ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride) {
+    assert(CanSatisfyRide(car, ride));
+
+    int sum_ride_length = distance(car, ride) + ride.length();
+    int end_tick = std::max(car.available_in_tick + sum_ride_length,
+                ride.earliest_start + ride.length());
+
+    return ScoreType{GetScore(car, ride), end_tick - car.available_in_tick};
+}
+
+ScoreType Solver::ScoreCarRide(const Car& car, const Ride& ride, int lookahead,
+	std::vector<const Ride*> continuations)
+{
 	assert(CanSatisfyRide(car, ride));
 
-	int sum_ride_length = distance(car, ride) + ride.length();
-	int end_tick = std::max(car.available_in_tick + sum_ride_length,
-				ride.earliest_start + ride.length());
+	auto scoreOfThisLeg = ScoreCarRide(car, ride);
 
-	return ScoreType{double(GetScore(car, ride)) / (end_tick - car.available_in_tick), 0, 0};
+	Ride* nextContinuation = nullptr;
+	ScoreType nextScore = {};
+	int distanceOfLegs = 0;
+	if (lookahead > 0) {
+		int sum_ride_length = distance(car, ride) + ride.length();
+		Car carAfterRide{0, ride.end_row, ride.end_col};
+		carAfterRide.available_in_tick =
+			std::max(car.available_in_tick + sum_ride_length,
+					ride.earliest_start + ride.length());
+		std::tie(nextContinuation, nextScore) =
+			SelectRide(carAfterRide, lookahead-1, continuations);
 
-#if 0
-	int abs_wait = std::abs(
-		car.available_in_tick + distance(car, ride) - ride.earliest_start);
-	return ScoreType{-ride.length(), -abs_wait, -distance(car, ride)};
-	return ScoreType{-abs_wait, ride.length(), -distance(car, ride)};
-	return {-ride.length(), -abs_wait, -distance(car, ride)};
-	return {-abs_wait, ride.length(), -distance(car, ride)};
-	return {-ride.length(), -abs_wait, -distance(car, ride)};
-	return {-abs_wait, ride.length(), -distance(car, ride)};
-#endif
+		if (!nextContinuation) {
+			nextScore = {};
+			distanceOfLegs = 0;
+		}
+	} else {
+		static int counter = 0;
+		if (++counter % 10000 == 0) {
+		}
+	}
+
+	return ScoreType{std::get<0>(nextScore) + std::get<0>(scoreOfThisLeg),
+		std::get<1>(nextScore) + std::get<1>(scoreOfThisLeg)};
 }
 
 void Solver::AssignRide(Car& car, Ride& ride) {
@@ -58,20 +86,27 @@ void Solver::AssignRide(Car& car, Ride& ride) {
 	input_.rides.pop_back();
 }
 
-Ride* Solver::SelectRide(const Car& c) {
+std::pair<Ride*, ScoreType> Solver::SelectRide(const Car& c, int lookahead,
+	std::vector<const Ride*> continuations)
+{
 	assert(c.available_in_tick <= /* < ? */ input_.step_count);
 	Ride* best_ride = nullptr;
 	ScoreType best_score = {};
 	for (Ride& ride : input_.rides) {
+		if (std::find(continuations.begin(), continuations.end(), &ride) !=
+			continuations.end())
+		{
+			continue;
+		}
 		if (CanSatisfyRide(c, ride)) {
-			auto ride_score = ScoreCarRide(c, ride);
-			if (!best_ride || best_score < ride_score) {
+			auto ride_score = ScoreCarRide(c, ride, lookahead, continuations);
+			if (!best_ride || CompareScores(best_score, ride_score)) {
 				best_ride = &ride;
 				best_score = ride_score;
 			}
 		}
 	}
-	return best_ride;
+	return std::make_pair(best_ride, best_score);
 }
 
 CarAssigmentsVec Solver::Solve() {
@@ -91,13 +126,21 @@ CarAssigmentsVec Solver::Solve() {
 		auto top = car_queue.top();
 		car_queue.pop();
 
-		auto* ride = SelectRide(top);
-		if (!ride) {
+		std::cerr << "Currently at tick: " << top.available_in_tick << std::endl;
+		const auto& currentTick = top.available_in_tick;
+		for (Ride& ride: input_.rides) {
+			if (ride.latest_finish <= currentTick) {
+				std::swap(ride, input_.rides.back());
+				input_.rides.pop_back();
+			}
+		}
+		auto ride = SelectRide(top, 1);
+		if (!ride.first) {
 			result.push_back({top.rides});
 			// car removed from queue
 			continue;
 		}
-		AssignRide(top, *ride);
+		AssignRide(top, *ride.first);
 
 		car_queue.push(top);
 	}

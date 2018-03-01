@@ -47,7 +47,8 @@ struct Car {
 	std::vector<int> rides;
 };
 
-using ScoreType = std::tuple<double, int, int>;
+using ScoreType = std::tuple<int, int>;
+bool CompareScores(const ScoreType& a, const ScoreType& b);
 
 struct Solver {
 	Solver(Input input) : input_(std::move(input)) {}
@@ -58,7 +59,11 @@ struct Solver {
 
 	ScoreType ScoreCarRide(const Car& car, const Ride& ride);
 
-	Ride* SelectRide(const Car& c);
+	ScoreType ScoreCarRide(const Car& car, const Ride& ride, int lookahead,
+		std::vector<const Ride*> continuations);
+
+	std::pair<Ride*, ScoreType> SelectRide(const Car& c, int lookahead = 0,
+		std::vector<const Ride*> continuations = {});
 	void AssignRide(Car& car, Ride& ride);
 
 	CarAssigmentsVec Solve();
